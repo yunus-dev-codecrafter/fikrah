@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import DashboardLayout from '../../components/layout/DashboardLayout'
 import Button from '../../components/ui/Button'
 import Panel from '../../components/ui/Panel'
@@ -9,8 +9,12 @@ import { useAuthStore } from '../../store/authStore'
 function HeadmasterReports() {
   const user = useAuthStore((s) => s.user)
   const records = useAcademicStore((s) => s.scoreRecords)
-  const updateHeadmasterReview = useAcademicStore((s) => s.updateHeadmasterReview)
+  const submitHeadmasterReview = useAcademicStore((s) => s.submitHeadmasterReview)
+  const fetchScoreRecords = useAcademicStore((s) => s.fetchScoreRecords)
+  const loadingScores = useAcademicStore((s) => s.loadingScores)
+  const scoresError = useAcademicStore((s) => s.scoresError)
   const [remarksById, setRemarksById] = useState({})
+  const [message, setMessage] = useState('')
 
   const schoolRecords = useMemo(
     () => records.filter((record) => record.schoolId === user?.schoolId),
@@ -19,12 +23,24 @@ function HeadmasterReports() {
 
   const pendingCount = schoolRecords.filter((item) => item.headmasterStatus === 'pending').length
 
-  const handleReview = (recordId, status) => {
-    updateHeadmasterReview({
+  useEffect(() => {
+    if (user?.schoolId) {
+      fetchScoreRecords(user.schoolId)
+    }
+  }, [fetchScoreRecords, user?.schoolId])
+
+  const handleReview = async (recordId, status) => {
+    setMessage('')
+    const result = await submitHeadmasterReview({
       id: recordId,
       status,
       headmasterComment: remarksById[recordId] || '',
     })
+    setMessage(
+      result.ok
+        ? `Record ${status}.`
+        : (result.message || 'Could not submit review.'),
+    )
   }
 
   return (
@@ -33,10 +49,17 @@ function HeadmasterReports() {
         <p className="mt-1 text-sm text-[#9A8678]">
           Pending approvals: <span className="font-semibold">{pendingCount}</span>
         </p>
+        {message ? <p className="mt-2 text-sm text-emerald-300">{message}</p> : null}
+        {scoresError ? <p className="mt-2 text-sm text-amber-300">{scoresError}</p> : null}
       </Panel>
 
       <Panel title="Review Queue">
         <ul className="space-y-3">
+          {loadingScores ? (
+            <li className="rounded-lg border border-dashed border-[#9A8678] p-3 text-sm text-[#9A8678]">
+              Loading score submissions...
+            </li>
+          ) : null}
           {schoolRecords.map((record) => (
             <li key={record.id} className="rounded-lg border border-[#9A8678] bg-[#202940]/60 p-3 text-sm">
               <p className="font-semibold text-[#f3e8df]">

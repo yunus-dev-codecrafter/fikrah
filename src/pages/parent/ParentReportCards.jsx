@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 import DashboardLayout from '../../components/layout/DashboardLayout'
 import Button from '../../components/ui/Button'
 import Panel from '../../components/ui/Panel'
@@ -8,6 +8,15 @@ import { useAuthStore } from '../../store/authStore'
 function ParentReportCards() {
   const user = useAuthStore((s) => s.user)
   const records = useAcademicStore((s) => s.scoreRecords)
+  const fetchScoreRecords = useAcademicStore((s) => s.fetchScoreRecords)
+  const loadingScores = useAcademicStore((s) => s.loadingScores)
+  const scoresError = useAcademicStore((s) => s.scoresError)
+
+  useEffect(() => {
+    if (user?.schoolId) {
+      fetchScoreRecords(user.schoolId)
+    }
+  }, [fetchScoreRecords, user?.schoolId])
 
   const approvedRecords = useMemo(
     () =>
@@ -31,10 +40,16 @@ function ParentReportCards() {
         <div className="flex flex-wrap items-center justify-between gap-2">
           <p className="text-sm text-[#9A8678]">Report cards are scoped by `schoolId`.</p>
         </div>
+        {scoresError ? <p className="mt-2 text-sm text-amber-300">{scoresError}</p> : null}
       </Panel>
 
       <Panel title="Report Cards">
         <ul className="space-y-3">
+          {loadingScores ? (
+            <li className="rounded-lg border border-dashed border-[#9A8678] p-3 text-sm text-[#9A8678]">
+              Loading approved records...
+            </li>
+          ) : null}
           {approvedRecords.map((record) => (
             <li key={record.id} className="rounded-lg border border-[#9A8678] bg-[#202940]/60 p-3 text-sm">
               <p className="font-semibold text-[#f3e8df]">

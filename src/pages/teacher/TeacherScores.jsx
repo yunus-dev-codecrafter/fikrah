@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import DashboardLayout from '../../components/layout/DashboardLayout'
 import Button from '../../components/ui/Button'
 import Panel from '../../components/ui/Panel'
@@ -18,8 +18,12 @@ const gradingBands = [
 
 function TeacherScores() {
   const user = useAuthStore((s) => s.user)
-  const addScoreRecord = useAcademicStore((s) => s.addScoreRecord)
+  const saveScoreRecord = useAcademicStore((s) => s.saveScoreRecord)
+  const fetchScoreRecords = useAcademicStore((s) => s.fetchScoreRecords)
+  const loadingScores = useAcademicStore((s) => s.loadingScores)
+  const scoresError = useAcademicStore((s) => s.scoresError)
   const records = useAcademicStore((s) => s.scoreRecords)
+  const [message, setMessage] = useState('')
   const [form, setForm] = useState({
     studentName: '',
     subject: '',
@@ -40,10 +44,17 @@ function TeacherScores() {
     [records, user?.schoolId],
   )
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
+  useEffect(() => {
+    if (user?.schoolId) {
+      fetchScoreRecords(user.schoolId)
+    }
+  }, [fetchScoreRecords, user?.schoolId])
 
-    addScoreRecord({
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setMessage('')
+
+    const result = await saveScoreRecord({
       schoolId: user?.schoolId,
       studentName: form.studentName,
       subject: form.subject,
@@ -51,6 +62,13 @@ function TeacherScores() {
       examScore: form.examScore,
       teacherComment: form.comment,
     })
+
+    if (!result.ok) {
+      setMessage(result.message || 'Could not save score.')
+      return
+    }
+
+    setMessage('Score saved and queued for headmaster review.')
     setForm({
       studentName: '',
       subject: '',
@@ -66,6 +84,8 @@ function TeacherScores() {
         <p className="mt-1 text-sm text-[#9A8678]">
           Enter CA + exam score, add comment, and track headmaster approval.
         </p>
+        {message ? <p className="mt-2 text-sm text-emerald-300">{message}</p> : null}
+        {scoresError ? <p className="mt-2 text-sm text-amber-300">{scoresError}</p> : null}
 
         <form onSubmit={handleSubmit} className="mt-4 grid gap-3 sm:grid-cols-2">
           <input
@@ -133,6 +153,11 @@ function TeacherScores() {
 
       <Panel title="Saved Records" subtitle="Submitted to headmaster review queue">
         <ul className="mt-3 space-y-2">
+          {loadingScores ? (
+            <li className="rounded-lg border border-dashed border-[#9A8678] p-3 text-sm text-[#9A8678]">
+              Loading scores...
+            </li>
+          ) : null}
           {schoolRecords.map((record) => (
             <li key={record.id} className="rounded-lg border border-[#9A8678] bg-[#202940]/60 p-3 text-sm">
               <p className="font-semibold text-[#f3e8df]">
