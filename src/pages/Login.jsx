@@ -11,10 +11,11 @@ function Login() {
   const [error, setError] = useState('')
   const [forgotVisible, setForgotVisible] = useState(false)
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault()
+    setError('')
     const username = form.email.split('@')[0]
-    const result = login({ username, password: form.password })
+    const result = await login({ username, password: form.password })
     if (!result.ok) {
       setError(result.message)
       return

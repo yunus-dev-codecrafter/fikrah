@@ -61,8 +61,12 @@ function TeacherAttendance() {
 
   const handleSync = async () => {
     if (!schoolId) return
-    const syncedCount = await syncQueuedAttendance(schoolId)
-    setMessage(`${syncedCount} queued attendance records synced.`)
+    try {
+      const syncedCount = await syncQueuedAttendance(schoolId)
+      setMessage(`${syncedCount} queued attendance records synced.`)
+    } catch (err) {
+      setMessage(err?.message || 'Sync failed.')
+    }
     loadQueue()
   }
 
