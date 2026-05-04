@@ -43,16 +43,16 @@ function DashboardLayout({ title, children }) {
   }
 
   return (
-    <div className="min-h-dvh bg-slate-50">
-      <header className="sticky top-0 z-10 border-b border-slate-200 bg-white/95 backdrop-blur">
+    <div className="min-h-dvh bg-[#202940]">
+      <header className="sticky top-0 z-10 border-b border-[#9A8678] bg-[#202940]/95 backdrop-blur">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
           <div>
-            <p className="text-xs uppercase tracking-wider text-slate-500">Fikrah SaaS</p>
-            <h1 className="text-lg font-semibold text-slate-900">{title}</h1>
+            <p className="text-xs uppercase tracking-wider text-[#9A8678]">Fikrah SaaS</p>
+            <h1 className="text-lg font-semibold text-[#f3e8df]">{title}</h1>
           </div>
           <button
             onClick={handleLogout}
-            className="rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700"
+            className="rounded-lg border border-[#9A8678] px-3 py-2 text-sm font-medium text-[#CAAA98] hover:bg-[#CAAA98]/10"
           >
             Logout
           </button>
@@ -60,8 +60,8 @@ function DashboardLayout({ title, children }) {
       </header>
 
       <div className="mx-auto grid max-w-7xl gap-4 px-4 py-4 md:grid-cols-[220px_1fr]">
-        <aside className="rounded-xl border border-slate-200 bg-white p-3">
-          <p className="mb-3 text-xs text-slate-500">
+        <aside className="rounded-xl border border-[#9A8678] bg-[#202940] p-3">
+          <p className="mb-3 text-xs text-[#9A8678]">
             {user?.fullName} {user?.schoolId ? `· ${user.schoolId}` : ''}
           </p>
           <nav className="space-y-1">
@@ -71,8 +71,8 @@ function DashboardLayout({ title, children }) {
                 to={item.to}
                 className={`block rounded-lg px-3 py-2 text-sm ${
                   location.pathname === item.to
-                    ? 'bg-indigo-50 font-semibold text-indigo-700'
-                    : 'text-slate-600 hover:bg-slate-100'
+                    ? 'bg-[#CAAA98] font-semibold text-[#202940]'
+                    : 'text-[#c9b7ab] hover:bg-[#4B4038]'
                 }`}
               >
                 {item.label}

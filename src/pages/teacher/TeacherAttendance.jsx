@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
 import DashboardLayout from '../../components/layout/DashboardLayout'
+import Button from '../../components/ui/Button'
+import Panel from '../../components/ui/Panel'
 import { getQueuedAttendance, queueAttendance, syncQueuedAttendance } from '../../features/attendance/attendanceQueue'
 import { useAuthStore } from '../../store/authStore'
 
@@ -66,29 +68,28 @@ function TeacherAttendance() {
 
   return (
     <DashboardLayout title="Teacher Attendance">
-      <section className="rounded-xl border border-slate-200 bg-white p-4">
-        <p className="text-sm font-semibold text-slate-900">Mark Attendance</p>
-        <p className="mb-4 text-sm text-slate-500">
+      <Panel title="Mark Attendance" subtitle="Offline-first capture and sync">
+        <p className="mb-4 text-sm text-[#9A8678]">
           Works offline. Data is saved locally and can be synced later.
         </p>
 
         <form onSubmit={handleQueue} className="grid gap-3 sm:grid-cols-2">
           <input
-            className="rounded-lg border border-slate-300 px-3 py-2"
+            className="rounded-lg border border-[#9A8678] bg-[#202940]/60 px-3 py-2 text-[#f3e8df]"
             placeholder="Class (e.g. JSS 1A)"
             value={form.className}
             onChange={(e) => setForm((p) => ({ ...p, className: e.target.value }))}
             required
           />
           <input
-            className="rounded-lg border border-slate-300 px-3 py-2"
+            className="rounded-lg border border-[#9A8678] bg-[#202940]/60 px-3 py-2 text-[#f3e8df]"
             type="date"
             value={form.date}
             onChange={(e) => setForm((p) => ({ ...p, date: e.target.value }))}
             required
           />
           <input
-            className="rounded-lg border border-slate-300 px-3 py-2"
+            className="rounded-lg border border-[#9A8678] bg-[#202940]/60 px-3 py-2 text-[#f3e8df]"
             type="number"
             min="0"
             placeholder="Present count"
@@ -97,7 +98,7 @@ function TeacherAttendance() {
             required
           />
           <input
-            className="rounded-lg border border-slate-300 px-3 py-2"
+            className="rounded-lg border border-[#9A8678] bg-[#202940]/60 px-3 py-2 text-[#f3e8df]"
             type="number"
             min="0"
             placeholder="Absent count"
@@ -106,43 +107,34 @@ function TeacherAttendance() {
             required
           />
 
-          <button className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white sm:col-span-2">
+          <Button type="submit" className="sm:col-span-2">
             Save Offline
-          </button>
+          </Button>
         </form>
 
-        {message ? <p className="mt-3 text-sm text-emerald-700">{message}</p> : null}
-      </section>
+        {message ? <p className="mt-3 text-sm text-emerald-300">{message}</p> : null}
+      </Panel>
 
-      <section className="rounded-xl border border-slate-200 bg-white p-4">
-        <div className="mb-3 flex items-center justify-between">
-          <h2 className="text-base font-semibold text-slate-900">Queued Attendance</h2>
-          <button
-            onClick={handleSync}
-            className="rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-700"
-          >
-            Sync Queue
-          </button>
-        </div>
+      <Panel title="Queued Attendance" right={<Button onClick={handleSync} variant="ghost">Sync Queue</Button>}>
 
         <ul className="space-y-2">
           {queuedItems.map((item) => (
-            <li key={item.id} className="rounded-lg border border-slate-200 p-3 text-sm">
-              <p className="font-medium text-slate-900">
+            <li key={item.id} className="rounded-lg border border-[#9A8678] bg-[#202940]/60 p-3 text-sm">
+              <p className="font-medium text-[#f3e8df]">
                 {item.className} - {item.date}
               </p>
-              <p className="text-slate-600">
+              <p className="text-[#c9b7ab]">
                 Present: {item.presentCount} | Absent: {item.absentCount}
               </p>
             </li>
           ))}
           {queuedItems.length === 0 ? (
-            <li className="rounded-lg border border-dashed border-slate-300 p-3 text-sm text-slate-500">
+            <li className="rounded-lg border border-dashed border-[#9A8678] p-3 text-sm text-[#9A8678]">
               No queued records yet.
             </li>
           ) : null}
         </ul>
-      </section>
+      </Panel>
     </DashboardLayout>
   )
 }

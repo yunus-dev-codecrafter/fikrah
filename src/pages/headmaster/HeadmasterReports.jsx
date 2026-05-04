@@ -1,5 +1,8 @@
 import { useMemo, useState } from 'react'
 import DashboardLayout from '../../components/layout/DashboardLayout'
+import Button from '../../components/ui/Button'
+import Panel from '../../components/ui/Panel'
+import StatusBadge from '../../components/ui/StatusBadge'
 import { useAcademicStore } from '../../store/academicStore'
 import { useAuthStore } from '../../store/authStore'
 
@@ -26,28 +29,27 @@ function HeadmasterReports() {
 
   return (
     <DashboardLayout title="Headmaster Reports Review">
-      <section className="rounded-xl border border-slate-200 bg-white p-4">
-        <h2 className="text-base font-semibold text-slate-900">Submitted Report Cards</h2>
-        <p className="mt-1 text-sm text-slate-600">
+      <Panel title="Submitted Report Cards" subtitle="Approve, reject, and annotate teacher submissions">
+        <p className="mt-1 text-sm text-[#9A8678]">
           Pending approvals: <span className="font-semibold">{pendingCount}</span>
         </p>
-      </section>
+      </Panel>
 
-      <section className="rounded-xl border border-slate-200 bg-white p-4">
+      <Panel title="Review Queue">
         <ul className="space-y-3">
           {schoolRecords.map((record) => (
-            <li key={record.id} className="rounded-lg border border-slate-200 p-3 text-sm">
-              <p className="font-semibold text-slate-900">
+            <li key={record.id} className="rounded-lg border border-[#9A8678] bg-[#202940]/60 p-3 text-sm">
+              <p className="font-semibold text-[#f3e8df]">
                 {record.studentName} - {record.subject}
               </p>
-              <p className="text-slate-700">
+              <p className="text-[#c9b7ab]">
                 CA {record.caScore} + Exam {record.examScore} = {record.totalScore} ({record.grade})
               </p>
-              <p className="text-slate-600">Teacher comment: {record.teacherComment || 'No comment'}</p>
-              <p className="text-slate-600">Status: {record.headmasterStatus}</p>
+              <p className="text-[#c9b7ab]">Teacher comment: {record.teacherComment || 'No comment'}</p>
+              <StatusBadge status={record.headmasterStatus} />
 
               <textarea
-                className="mt-2 w-full rounded-lg border border-slate-300 px-3 py-2"
+                className="mt-2 w-full rounded-lg border border-[#9A8678] bg-[#202940]/50 px-3 py-2 text-[#f3e8df]"
                 rows={2}
                 placeholder="Headmaster remark"
                 value={remarksById[record.id] || record.headmasterComment}
@@ -60,28 +62,22 @@ function HeadmasterReports() {
               />
 
               <div className="mt-2 flex gap-2">
-                <button
-                  onClick={() => handleReview(record.id, 'approved')}
-                  className="rounded-lg bg-emerald-600 px-3 py-2 text-xs font-semibold text-white"
-                >
+                <Button onClick={() => handleReview(record.id, 'approved')} className="text-xs">
                   Approve
-                </button>
-                <button
-                  onClick={() => handleReview(record.id, 'rejected')}
-                  className="rounded-lg bg-rose-600 px-3 py-2 text-xs font-semibold text-white"
-                >
+                </Button>
+                <Button onClick={() => handleReview(record.id, 'rejected')} variant="ghost" className="text-xs">
                   Reject
-                </button>
+                </Button>
               </div>
             </li>
           ))}
           {schoolRecords.length === 0 ? (
-            <li className="rounded-lg border border-dashed border-slate-300 p-3 text-sm text-slate-500">
+            <li className="rounded-lg border border-dashed border-[#9A8678] p-3 text-sm text-[#9A8678]">
               No report submissions yet from teachers.
             </li>
           ) : null}
         </ul>
-      </section>
+      </Panel>
     </DashboardLayout>
   )
 }

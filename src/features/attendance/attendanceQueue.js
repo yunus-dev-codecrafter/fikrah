@@ -5,10 +5,13 @@ import {
 } from '../../offline/indexedDb'
 
 export async function queueAttendance(record) {
+  const timestamp = new Date().toISOString()
   return addAttendanceRecord({
     ...record,
     synced: false,
-    queuedAt: new Date().toISOString(),
+    queuedAt: timestamp,
+    createdAt: timestamp,
+    updatedAt: timestamp,
   })
 }
 

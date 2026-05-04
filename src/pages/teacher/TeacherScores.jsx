@@ -1,5 +1,8 @@
 import { useMemo, useState } from 'react'
 import DashboardLayout from '../../components/layout/DashboardLayout'
+import Button from '../../components/ui/Button'
+import Panel from '../../components/ui/Panel'
+import StatusBadge from '../../components/ui/StatusBadge'
 import { getLetterGrade } from '../../utils/grading'
 import { useAcademicStore } from '../../store/academicStore'
 import { useAuthStore } from '../../store/authStore'
@@ -59,29 +62,28 @@ function TeacherScores() {
 
   return (
     <DashboardLayout title="Teacher Scores">
-      <section className="rounded-xl border border-slate-200 bg-white p-4">
-        <h2 className="text-base font-semibold text-slate-900">Score Entry</h2>
-        <p className="mt-1 text-sm text-slate-600">
+      <Panel title="Score Entry" subtitle="Continuous assessment + exam grading workflow">
+        <p className="mt-1 text-sm text-[#9A8678]">
           Enter CA + exam score, add comment, and track headmaster approval.
         </p>
 
         <form onSubmit={handleSubmit} className="mt-4 grid gap-3 sm:grid-cols-2">
           <input
-            className="rounded-lg border border-slate-300 px-3 py-2"
+            className="rounded-lg border border-[#9A8678] bg-[#202940]/60 px-3 py-2 text-[#f3e8df]"
             placeholder="Student name"
             value={form.studentName}
             onChange={(e) => setForm((p) => ({ ...p, studentName: e.target.value }))}
             required
           />
           <input
-            className="rounded-lg border border-slate-300 px-3 py-2"
+            className="rounded-lg border border-[#9A8678] bg-[#202940]/60 px-3 py-2 text-[#f3e8df]"
             placeholder="Subject (e.g. Mathematics)"
             value={form.subject}
             onChange={(e) => setForm((p) => ({ ...p, subject: e.target.value }))}
             required
           />
           <input
-            className="rounded-lg border border-slate-300 px-3 py-2"
+            className="rounded-lg border border-[#9A8678] bg-[#202940]/60 px-3 py-2 text-[#f3e8df]"
             type="number"
             min="0"
             max="40"
@@ -91,7 +93,7 @@ function TeacherScores() {
             required
           />
           <input
-            className="rounded-lg border border-slate-300 px-3 py-2"
+            className="rounded-lg border border-[#9A8678] bg-[#202940]/60 px-3 py-2 text-[#f3e8df]"
             type="number"
             min="0"
             max="60"
@@ -101,58 +103,55 @@ function TeacherScores() {
             required
           />
           <textarea
-            className="rounded-lg border border-slate-300 px-3 py-2 sm:col-span-2"
+            className="rounded-lg border border-[#9A8678] bg-[#202940]/60 px-3 py-2 text-[#f3e8df] sm:col-span-2"
             rows={3}
             placeholder="Teacher comment"
             value={form.comment}
             onChange={(e) => setForm((p) => ({ ...p, comment: e.target.value }))}
           />
 
-          <div className="rounded-lg bg-slate-50 px-3 py-2 text-sm text-slate-700">
-            Total: <span className="font-semibold text-slate-900">{totalScore}</span> / 100
+          <div className="rounded-lg bg-[#202940]/70 px-3 py-2 text-sm text-[#c9b7ab]">
+            Total: <span className="font-semibold text-[#f3e8df]">{totalScore}</span> / 100
           </div>
-          <div className="rounded-lg bg-indigo-50 px-3 py-2 text-sm text-indigo-700">
+          <div className="rounded-lg bg-[#CAAA98]/20 px-3 py-2 text-sm text-[#f4d2bf]">
             Grade: <span className="font-semibold">{grade}</span>
           </div>
 
-          <button className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white sm:col-span-2">
+          <Button type="submit" className="sm:col-span-2">
             Save Score
-          </button>
+          </Button>
         </form>
 
         <div className="mt-4 grid gap-2 sm:grid-cols-2">
           {gradingBands.map((band) => (
-            <div key={band} className="rounded-lg bg-slate-50 px-3 py-2 text-sm text-slate-700">
+            <div key={band} className="rounded-lg bg-[#202940]/70 px-3 py-2 text-sm text-[#c9b7ab]">
               {band}
             </div>
           ))}
         </div>
-      </section>
+      </Panel>
 
-      <section className="rounded-xl border border-slate-200 bg-white p-4">
-        <h2 className="text-base font-semibold text-slate-900">Saved Records (Mock)</h2>
+      <Panel title="Saved Records" subtitle="Submitted to headmaster review queue">
         <ul className="mt-3 space-y-2">
           {schoolRecords.map((record) => (
-            <li key={record.id} className="rounded-lg border border-slate-200 p-3 text-sm">
-              <p className="font-semibold text-slate-900">
+            <li key={record.id} className="rounded-lg border border-[#9A8678] bg-[#202940]/60 p-3 text-sm">
+              <p className="font-semibold text-[#f3e8df]">
                 {record.studentName} - {record.subject}
               </p>
-              <p className="text-slate-700">
+              <p className="text-[#c9b7ab]">
                 CA {record.caScore} + Exam {record.examScore} = {record.totalScore} ({record.grade})
               </p>
-              <p className="text-slate-600">Comment: {record.teacherComment || 'No comment'}</p>
-              <p className="text-slate-600">
-                Headmaster: {record.headmasterStatus === 'approved' ? 'Approved' : 'Pending'}
-              </p>
+              <p className="text-[#c9b7ab]">Comment: {record.teacherComment || 'No comment'}</p>
+              <StatusBadge status={record.headmasterStatus} />
             </li>
           ))}
           {schoolRecords.length === 0 ? (
-            <li className="rounded-lg border border-dashed border-slate-300 p-3 text-sm text-slate-500">
+            <li className="rounded-lg border border-dashed border-[#9A8678] p-3 text-sm text-[#9A8678]">
               No score records yet.
             </li>
           ) : null}
         </ul>
-      </section>
+      </Panel>
     </DashboardLayout>
   )
 }

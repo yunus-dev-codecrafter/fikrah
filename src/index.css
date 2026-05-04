@@ -1,8 +1,10 @@
 @import "tailwindcss";
 
 @theme {
-  --color-brand: #4f46e5;
-  --color-brand-soft: #eef2ff;
+  --color-primary-dark: #202940;
+  --color-secondary-dark: #4b4038;
+  --color-muted-accent: #9a8678;
+  --color-light-accent: #caaa98;
 }
 
 * {
@@ -18,6 +20,6 @@ body,
 body {
   margin: 0;
   font-family: Inter, "Segoe UI", Roboto, sans-serif;
-  background-color: #f8fafc;
-  color: #0f172a;
+  background-color: #202940;
+  color: #f8f5f2;
 }

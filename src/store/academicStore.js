@@ -18,6 +18,8 @@ export const useAcademicStore = create((set) => ({
         teacherComment: payload.teacherComment || '',
         headmasterStatus: 'pending',
         headmasterComment: '',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
       }
 
       return { scoreRecords: [newRecord, ...state.scoreRecords] }
@@ -25,7 +27,9 @@ export const useAcademicStore = create((set) => ({
   updateHeadmasterReview: ({ id, status, headmasterComment }) =>
     set((state) => ({
       scoreRecords: state.scoreRecords.map((record) =>
-        record.id === id ? { ...record, headmasterStatus: status, headmasterComment } : record,
+        record.id === id
+          ? { ...record, headmasterStatus: status, headmasterComment, updatedAt: new Date().toISOString() }
+          : record,
       ),
     })),
 }))
