@@ -1,0 +1,23 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand: #4f46e5;
+  --color-brand-soft: #eef2ff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  min-height: 100dvh;
+}
+
+body {
+  margin: 0;
+  font-family: Inter, "Segoe UI", Roboto, sans-serif;
+  background-color: #f8fafc;
+  color: #0f172a;
+}
