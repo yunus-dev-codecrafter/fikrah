@@ -2,10 +2,12 @@ import { Router } from 'express'
 import { randomUUID } from 'crypto'
 import { getDb } from '../db.js'
 import { authMiddleware, assertSchoolAccess, requireRoles } from '../middleware/auth.js'
+import { enforceActiveSubscription } from '../middleware/subscriptionEnforcement.js'
 
 const router = Router()
 
 router.use(authMiddleware)
+router.use(enforceActiveSubscription)
 
 /** Batch upload from offline queue (teachers). */
 router.post(

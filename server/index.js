@@ -5,6 +5,7 @@ import { initDb } from './db.js'
 import authRoutes from './routes/auth.js'
 import attendanceRoutes from './routes/attendance.js'
 import scoresRoutes from './routes/scores.js'
+import superAdminRoutes from './routes/superAdmin.js'
 
 initDb()
 
@@ -26,6 +27,7 @@ app.get('/api/health', (_req, res) => {
 app.use('/api/auth', authRoutes)
 app.use('/api/attendance', attendanceRoutes)
 app.use('/api/scores', scoresRoutes)
+app.use('/api/super-admin', superAdminRoutes)
 
 app.use((_req, res) => {
   res.status(404).json({ error: 'Not found' })

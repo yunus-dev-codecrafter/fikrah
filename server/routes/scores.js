@@ -2,6 +2,7 @@ import { Router } from 'express'
 import { randomUUID } from 'crypto'
 import { getDb } from '../db.js'
 import { authMiddleware, assertSchoolAccess, requireRoles } from '../middleware/auth.js'
+import { enforceActiveSubscription } from '../middleware/subscriptionEnforcement.js'
 
 const router = Router()
 
@@ -15,6 +16,7 @@ function letterGrade(total) {
 }
 
 router.use(authMiddleware)
+router.use(enforceActiveSubscription)
 
 router.post('/', requireRoles('teacher', 'headmaster', 'super-admin'), (req, res) => {
   const schoolId = req.body?.schoolId
