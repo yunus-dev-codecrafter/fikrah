@@ -1,17 +1,22 @@
 const statusStyles = {
-  active: 'bg-[#CAAA98]/20 text-[#f4d2bf] border-[#CAAA98]',
-  pending: 'bg-[#9A8678]/20 text-[#c9b7ab] border-[#9A8678]',
-  inactive: 'bg-[#202940]/70 text-[#9A8678] border-[#9A8678]',
-  approved: 'bg-emerald-900/40 text-emerald-300 border-emerald-700',
-  rejected: 'bg-rose-900/40 text-rose-300 border-rose-700',
+  active: 'bg-emerald-100 text-emerald-800 border-emerald-200',
+  pending: 'bg-amber-100 text-amber-800 border-amber-200',
+  inactive: 'bg-gray-100 text-gray-600 border-gray-200',
+  approved: 'bg-green-100 text-green-800 border-green-200',
+  rejected: 'bg-red-100 text-red-800 border-red-200',
+  success: 'bg-emerald-100 text-emerald-800 border-emerald-200',
+  warning: 'bg-amber-100 text-amber-800 border-amber-200',
+  error: 'bg-red-100 text-red-800 border-red-200',
+  info: 'bg-blue-100 text-blue-800 border-blue-200'
 }
 
-function StatusBadge({ status = 'pending' }) {
+function StatusBadge({ status = 'pending', className = '' }) {
   const normalized = status.toLowerCase()
   return (
     <span
-      className={`inline-flex rounded-full border px-2.5 py-1 text-xs font-semibold ${statusStyles[normalized] || statusStyles.pending}`}
+      className={`inline-flex items-center rounded-full border px-3 py-1 text-xs font-semibold transition-all duration-200 ${statusStyles[normalized] || statusStyles.pending} ${className}`}
     >
+      <span className="w-1.5 h-1.5 rounded-full mr-1.5 bg-current opacity-60"></span>
       {status}
     </span>
   )
